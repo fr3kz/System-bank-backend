@@ -6,3 +6,4 @@ class User(AbstractUser):
     is_Admin = models.BooleanField(default=False)
     is_Customer = models.BooleanField(default=False)
     is_Employee = models.BooleanField(default=False)
+    is_Activated = models.BooleanField(default=False)

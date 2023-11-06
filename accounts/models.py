@@ -19,6 +19,7 @@ class Transfer(models.Model):
     account2_id = models.IntegerField()
     amount = models.IntegerField()
     date = models.DateTimeField(auto_now_add=True)
+    title = models.CharField(max_length=100,default="")
 
     def __str__(self):
         return str(self.date)
