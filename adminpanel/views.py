@@ -1,5 +1,7 @@
 from django.shortcuts import render
 from rest_framework.views import APIView,Response
+
+from accounts.models import Account
 from users.models import User
 from .serializers import EmployeeSerializer
 # Create your views here.
@@ -34,3 +36,23 @@ class ActivateUser(APIView):
         user.is_Activated = True
         user.save()
         return Response("User activated")
+
+
+
+class DeleteEmployee(APIView):
+    def get(self,request,usrid):
+        user = User.objects.get(id=usrid)
+        user.delete()
+        return Response("User deleted")
+
+class DeleteUser(APIView):
+    def get(self,request,usrid):
+        accounts = Account.objects.filter(account_owner=usrid)
+
+        for account in accounts:
+            account.delete()
+
+        user = User.objects.get(id=usrid)
+        user.delete()
+
+        return Response("User deleted")
