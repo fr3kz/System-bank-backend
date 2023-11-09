@@ -56,7 +56,7 @@ class RegisterSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ('id', 'username', 'email', 'password')
+        fields = ('id', 'username', 'email', 'password','firstname','lastname')
         extra_kwargs = {'password': {'write_only': True}}
     username = serializers.CharField(
         label="Username",
@@ -69,16 +69,26 @@ class RegisterSerializer(serializers.ModelSerializer):
         trim_whitespace=False,
         write_only=True
     )
+    firstname = serializers.CharField(
+        label="firstname",
+        write_only=True
+    )
+    lastname = serializers.CharField(
+        label="lastname",
+        write_only=True
+    )
 
     def validate(self,attr):
         username = attr.get('username')
         password = attr.get('password')
+        firstname = attr.get('firstname')
+        lastname = attr.get('lastname')
         #email = attr.get('email')
         if username and password:
             if User.objects.filter(username=username).exists():
                 msg = 'Username already exists.'
                 raise serializers.ValidationError(msg, code='authorization')
-            user = User.objects.create_user(username=username,password=password)
+            user = User.objects.create_user(username=username,password=password,first_name=firstname,last_name=lastname)
             user.save()
             usr = authenticate(request=self.context.get('request'),
                                 username=username, password=password)

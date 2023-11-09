@@ -1,4 +1,6 @@
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
+from django.utils.decorators import method_decorator
+from django.views.decorators.csrf import csrf_exempt
 from rest_framework import permissions
 from rest_framework.response import Response
 from rest_framework.views import APIView
@@ -27,12 +29,19 @@ class ShowTransferHistory(APIView):
         transfers_serializer = TransferSerializer(transfers, many=True)
         return Response(transfers_serializer.data)
 
+#@method_decorator(csrf_exempt, name='dispatch')
 class MakeTransfer(APIView):
-    def post(self, request, *args, **kwargs):
-        serializer = TransferSerializer(data=request.data)
-        if serializer.is_valid():
+    permission_classes = (permissions.AllowAny,)
+
+    def post(self, request):
+        serializer = TransferSerializer(data=self.request.data)
+
+        if serializer.is_valid(raise_exception=True):
             serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
+            return Response({"message": "Transfers successful", "transfers": serializer.data},
+                            status=status.HTTP_201_CREATED)
         else:
-            print("Validation errors:", serializer.errors)
-            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+            return Response({"message": "Transfers failed", "transfers": serializer.data}, status=status.HTTP_400_BAD_REQUEST)
+            #                     status=status.HTTP_400_BAD_REQUEST)
+      #     '''return Response({"message": "Transfers failed", "transfers": serializer.data},
+       #                     status=status.HTTP_400_BAD_REQUEST)'''
