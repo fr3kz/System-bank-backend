@@ -16,11 +16,16 @@ class TransferSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
     def validate(self, data):
+        print("Validating data:", data)
 
         account1 = get_object_or_404(Account, account_number=data['account1_id'])
         account2 = get_object_or_404(Account, account_number=data['account2_id'])
         amount = data['amount']
         title = data['title']
+
+        print("Account 1 balance:", account1.account_balance)
+        print("Transfer amount:", amount)
+
         if account1.account_balance < amount:
             raise serializers.ValidationError("Not enough money on account")
 

@@ -1,4 +1,5 @@
 from django.shortcuts import render
+from rest_framework import permissions
 from rest_framework.views import APIView,Response
 
 from accounts.models import Account
@@ -56,3 +57,37 @@ class DeleteUser(APIView):
         user.delete()
 
         return Response("User deleted")
+
+class User_count(APIView):
+    permission_classes = (permissions.AllowAny,)
+    def get(self,request):
+        users_count = User.objects.all().count()
+        print(users_count)
+        contex = {'value':users_count}
+        return Response(contex)
+
+
+
+class Employe_count(APIView):
+    permission_classes = (permissions.AllowAny,)
+    def get(self,request):
+        users_count = User.objects.filter(is_Employee=True).count()
+        print(users_count)
+        contex = {'value':users_count}
+        return Response(contex)
+
+class Ticket_count(APIView):
+    permission_classes = (permissions.AllowAny,)
+    def get(self,request):
+
+        contex = {'value':'0'}
+        return Response(contex)
+
+class Ticket_list(APIView):
+    #lista wszystkich wynikow
+    pass
+
+class Ticket_detail(APIView):
+    #bedzie mialo funkcje post do usuwania i get do wyswietlania danych
+    pass
+

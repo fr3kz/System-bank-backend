@@ -34,7 +34,8 @@ class MakeTransfer(APIView):
     permission_classes = (permissions.AllowAny,)
 
     def post(self, request):
-        serializer = TransferSerializer(data=self.request.data)
+        print(request.data)
+        serializer = TransferSerializer(data=request.data)
 
         if serializer.is_valid(raise_exception=True):
             serializer.save()
@@ -42,6 +43,3 @@ class MakeTransfer(APIView):
                             status=status.HTTP_201_CREATED)
         else:
             return Response({"message": "Transfers failed", "transfers": serializer.data}, status=status.HTTP_400_BAD_REQUEST)
-            #                     status=status.HTTP_400_BAD_REQUEST)
-      #     '''return Response({"message": "Transfers failed", "transfers": serializer.data},
-       #                     status=status.HTTP_400_BAD_REQUEST)'''
