@@ -84,10 +84,29 @@ class Ticket_count(APIView):
         return Response(contex)
 
 class Ticket_list(APIView):
+    permission_classes = (permissions.AllowAny,)
     #lista wszystkich wynikow
-    pass
+    def get(self,request):
+        users = User.objects.filter(is_Activated=False)
+        user_serializer = EmployeeSerializer(users,many=True)
+        return Response(user_serializer.data, status=200)
 
-class Ticket_detail(APIView):
+
+class User_detail(APIView):
     #bedzie mialo funkcje post do usuwania i get do wyswietlania danych
-    pass
+    permission_classes = (permissions.AllowAny,)
+    def get(self,request,userid):
+        user = User.objects.get(id=userid)
+        user_serializer = EmployeeSerializer(user)
+        return Response(user_serializer.data, status=200)
+
+    def post(self,request,userid):
+        user = User.objects.get(id=userid)
+        user.is_Activated = True
+        user.save()
+
+        contex = {'value':'User activated'}
+        return Response(contex, status=200)
+
+
 

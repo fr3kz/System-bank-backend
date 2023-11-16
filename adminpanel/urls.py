@@ -13,5 +13,5 @@ urlpatterns= [
         path('employe_count/',views.Employe_count.as_view()),
         path('ticket_count/',views.Ticket_count.as_view()),
         path('ticket_list/',views.Ticket_list.as_view()),
-        path('ticket_detail/<int:ticketid>/',views.Ticket_detail.as_view()),
+        path('ticket_detail/<int:userid>/',views.User_detail.as_view()),
     ]
