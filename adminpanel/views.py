@@ -65,7 +65,7 @@ class DeleteUser(APIView):
         return Response("User deleted")
 
 class User_count(APIView):
-    permission_classes = (permissions.AllowAny,)
+
     def get(self,request):
         users_count = User.objects.all().count()
         print(users_count)
@@ -75,7 +75,7 @@ class User_count(APIView):
 
 
 class Employe_count(APIView):
-    permission_classes = (permissions.AllowAny,)
+
     def get(self,request):
         users_count = User.objects.filter(is_Employee=True).count()
         print(users_count)
@@ -83,7 +83,7 @@ class Employe_count(APIView):
         return Response(contex)
 
 class Ticket_count(APIView):
-    permission_classes = (permissions.AllowAny,)
+
     def get(self,request):
         users_count = User.objects.filter(is_Activated=False).count()
         contex = {'value':users_count}
