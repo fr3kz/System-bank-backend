@@ -7,10 +7,11 @@ from users.models import User
 from .serializers import EmployeeSerializer
 # Create your views here.
 class ShowEmployess(APIView):
+    permission_classes = (permissions.AllowAny,)
     def get(self,request):
         employees = User.objects.filter(is_Employee=True)
         emp_serializer = EmployeeSerializer(employees,many=True)
-        return Response(emp_serializer.data)
+        return Response(emp_serializer.data,status=200)
 
 
 
@@ -21,6 +22,7 @@ class ShowEmployByID(APIView):
         return Response(emp_serializer.data)
 
 class CreateEmployee(APIView):
+    permission_classes = (permissions.AllowAny,)
     def post(self,request):
         employe_serializer = EmployeeSerializer(data=request.data)
 
@@ -32,19 +34,23 @@ class CreateEmployee(APIView):
 
 
 class ActivateUser(APIView):
+    permission_classes = (permissions.AllowAny,)
     def get(self,request,usrid):
         user = User.objects.get(id=usrid)
         user.is_Activated = True
         user.save()
-        return Response("User activated")
+        contex = {'value': 'User activated'}
+
+        return Response(contex,status=201)
 
 
 
 class DeleteEmployee(APIView):
+    permission_classes = (permissions.AllowAny,)
     def get(self,request,usrid):
         user = User.objects.get(id=usrid)
         user.delete()
-        return Response("User deleted")
+        return Response({'value':'User deleted'},status=201)
 
 class DeleteUser(APIView):
     def get(self,request,usrid):
@@ -79,8 +85,8 @@ class Employe_count(APIView):
 class Ticket_count(APIView):
     permission_classes = (permissions.AllowAny,)
     def get(self,request):
-
-        contex = {'value':'0'}
+        users_count = User.objects.filter(is_Activated=False).count()
+        contex = {'value':users_count}
         return Response(contex)
 
 class Ticket_list(APIView):
