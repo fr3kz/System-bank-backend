@@ -41,10 +41,10 @@ class LoginSerializer(serializers.Serializer):
                                 username=username, password=password)
             if not user:
                 # If we don't have a regular user, raise a ValidationError
-                msg = 'Access denied: wrong username or password.'
+                msg = {'value':'Błędny login lub hasło'}
                 raise serializers.ValidationError(msg, code='authorization')
         else:
-            msg = 'Both "username" and "password" are required.'
+            msg = {'value':'Must include username and password'}
             raise serializers.ValidationError(msg, code='authorization')
 
         attrs['user'] = user

@@ -30,17 +30,19 @@ class UserLogin(APIView):
     def post(self, request, format=None):
         serializer = LoginSerializer(data=self.request.data,
                                      context={'request': self.request})
-        serializer.is_valid(raise_exception=True)
-        user = serializer.validated_data['user']
+        bool = serializer.is_valid(raise_exception=False)
+        if bool:
+            user = serializer.validated_data['user']
 
-        login(request, user)
+            login(request, user)
 
-        sessionid = request.session.session_key
-        csrf_token = get_token(request)
+            sessionid = request.session.session_key
+            csrf_token = get_token(request)
 
-        contex = {'sessionid': sessionid, 'csrf': csrf_token, 'userid': user.id, 'username': user.username}
-        return Response(contex, status=status.HTTP_202_ACCEPTED)
-
+            contex = {'sessionid': sessionid, 'csrf': csrf_token, 'userid': user.id, 'username': user.username,'value':''}
+            return Response(contex, status=status.HTTP_202_ACCEPTED)
+        contex = {'value':'error','error':serializer.errors}
+        return Response(contex, status=status.HTTP_400_BAD_REQUEST)
 
 class RegisterUser(APIView):
     permission_classes = (permissions.AllowAny,)
