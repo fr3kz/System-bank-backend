@@ -39,7 +39,9 @@ class UserLogin(APIView):
             sessionid = request.session.session_key
             csrf_token = get_token(request)
 
-            contex = {'sessionid': sessionid, 'csrf': csrf_token, 'userid': user.id, 'username': user.username,'value':''}
+            account_number = Account.objects.get(account_owner=user,is_Main=True).account_number
+
+            contex = {'sessionid': sessionid, 'csrf': csrf_token, 'userid': user.id, 'username': user.username,'value':'','account_number':account_number}
             return Response(contex, status=status.HTTP_202_ACCEPTED)
         contex = {'value':'error','error':serializer.errors}
         return Response(contex, status=status.HTTP_400_BAD_REQUEST)
@@ -68,8 +70,10 @@ class RegisterUser(APIView):
 
             sessionid = request.session.session_key
             csrf_token = get_token(request)
-            contex = {'sessionid': sessionid, 'csrf': csrf_token, 'userid': user.id, 'username': user.username}
+            contex = {'sessionid': sessionid, 'csrf': csrf_token, 'userid': user.id, 'username': user.username,'value':'','account_number':account.account_number}
             return Response(contex, status=status.HTTP_202_ACCEPTED)
+        contex = {'value': 'error', 'error': register_serializer.errors}
+        return Response(contex, status=status.HTTP_400_BAD_REQUEST)
 
 
 class UserDetail(APIView):

@@ -86,7 +86,7 @@ class RegisterSerializer(serializers.ModelSerializer):
         #email = attr.get('email')
         if username and password:
             if User.objects.filter(username=username).exists():
-                msg = 'Username already exists.'
+                msg = {'value':'Username already exists'}
                 raise serializers.ValidationError(msg, code='authorization')
             user = User.objects.create_user(username=username,password=password,first_name=firstname,last_name=lastname)
             user.save()
@@ -94,6 +94,6 @@ class RegisterSerializer(serializers.ModelSerializer):
                                 username=username, password=password)
             attr['usr'] = usr
         else:
-            msg = 'All fields are required.'
+            msg = {'value':'Must include username and password'}
             raise serializers.ValidationError(msg, code='authorization')
         return attr
